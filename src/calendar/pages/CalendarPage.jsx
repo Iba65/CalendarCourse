@@ -1,0 +1,71 @@
+import { Calendar } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import {
+  Navbar,
+  CalendarEvent,
+  CalendarModal,
+  FabAddNew,
+  FabDelete,
+} from "./../";
+import "./CalendarPage.css";
+//import { addHours } from "date-fns";
+import { localizer, getMessagesES } from "../../helpers";
+import { useState } from "react";
+import { useUiStore, useCalendarStore } from "../../hooks";
+
+export const CalendarPage = () => {
+  const { openDateModal } = useUiStore();
+  const { events, hasEventSelected, setActiveEvent } = useCalendarStore();
+  const [lastView, setLastView] = useState(
+    localStorage.getItem("lastView") || "week"
+  );
+  const evenStyleGetter = (event, start, end, isSelected) => {
+    const style = {
+      backgroundColor: "#347CF7",
+      borderRadius: "0px",
+      opacity: 0.8,
+      color: "white",
+    };
+
+    return { style };
+  };
+
+  const onDoubleClick = (e) => {
+    openDateModal();
+  };
+
+  const onSelect = (e) => {
+    setActiveEvent(e);
+  };
+
+  const onViewChanged = (e) => {
+    localStorage.setItem("lastView", e);
+    setLastView(e);
+  };
+  return (
+    <div className="calendarContainer">
+      <Navbar />
+      <Calendar
+        culture="es"
+        localizer={localizer}
+        events={events}
+        defaultView={lastView}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: "calc( 100vh - 80px", width: "100vw" }}
+        messages={getMessagesES()}
+        eventPropGetter={evenStyleGetter}
+        components={{
+          event: CalendarEvent,
+        }}
+        onDoubleClickEvent={onDoubleClick}
+        onSelectEvent={onSelect}
+        onView={onViewChanged}
+      />
+
+      <CalendarModal />
+      <FabAddNew />
+      {hasEventSelected ? <FabDelete /> : null}
+    </div>
+  );
+};

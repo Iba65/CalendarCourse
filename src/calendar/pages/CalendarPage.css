@@ -1,0 +1,13 @@
+.calendarContainer {
+  box-sizing: content-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100vw;
+  min-height: 100vh;
+}
+
+.navbar {
+  width: 100vw;
+}
